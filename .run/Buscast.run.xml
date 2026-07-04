@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Buscast" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <envs>
+      <env name="BUS_LOCATION_API_KEY" value="99ff7489fc4bdefa2cbe880f6617a8fe3e5b018b5a93212a8c1ecb28a8edbcdc" />
+    </envs>
+    <module name="buscast.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.lim0205.buscast.BuscastApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
