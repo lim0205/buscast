@@ -35,12 +35,11 @@ public class RouteParser {
                 continue;
             }
 
-            // 특수 노선 제외
-            if (routeName != null &&
-                    (routeName.contains("출근")
-                            || routeName.contains("퇴근")
-                            || routeName.contains("예약")
-                            || routeName.contains("콜"))) {
+            // M버스, G버스만 저장 (예약 노선 제외)
+            if (routeName == null
+                    || (!routeName.startsWith("M") && !routeName.startsWith("G"))
+                    || routeName.contains("예약")
+                    || routeName.contains("N")) {
                 continue;
             }
 

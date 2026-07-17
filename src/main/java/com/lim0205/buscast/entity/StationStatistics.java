@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(
@@ -36,8 +37,7 @@ public class StationStatistics {
 
     private Short dayType;
 
-    @Column(length = 10)
-    private String timeSlot;
+    private LocalTime timeSlot;
 
     private BigDecimal avgQueue;
 
@@ -45,8 +45,7 @@ public class StationStatistics {
 
     private BigDecimal avgRemainSeat;
 
-    @Column(precision = 5, scale = 2)
-    private BigDecimal boardingSuccessRate;
+    private BigDecimal queueBonus;
 
     private Integer sampleCount;
 

@@ -32,6 +32,8 @@ public class PredictionHistory {
     @Column(precision = 5, scale = 2)
     private BigDecimal predictedQueue;
 
+    private Integer userQueue;
+
     private Integer actualQueue;
 
     @Column(precision = 5, scale = 2)
@@ -40,11 +42,26 @@ public class PredictionHistory {
     @Column(precision = 5, scale = 2)
     private BigDecimal predictedProbability;
 
-    private boolean boardResult;
+    private Boolean boardResult;
 
     private Short predictionType;
 
     private LocalDateTime predictionTime;
 
     private LocalDateTime feedbackTime;
+
+    public void updateFeedback(
+            Integer userQueue,
+            Integer actualQueue,
+            Boolean boardResult,
+            LocalDateTime feedbackTime
+    ) {
+        if (userQueue != null) {
+            this.userQueue = userQueue;
+        }
+
+        this.actualQueue = actualQueue;
+        this.boardResult = boardResult;
+        this.feedbackTime = feedbackTime;
+    }
 }
