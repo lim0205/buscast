@@ -4,9 +4,10 @@ import com.lim0205.buscast.client.BusLocationApiClient;
 import com.lim0205.buscast.dto.location.BusLocationItem;
 import com.lim0205.buscast.dto.location.BusLocationResponse;
 import com.lim0205.buscast.entity.BusSnapshot;
+import com.lim0205.buscast.entity.Route;
 import com.lim0205.buscast.repository.BusSnapshotRepository;
-import com.lim0205.buscast.repository.RouteRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,55 +15,65 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BusSnapshotService {
 
     private final BusLocationApiClient busLocationApiClient;
-    private final RouteRepository routeRepository;
+    private final RouteService routeService;
     private final BusSnapshotRepository busSnapshotRepository;
 
     @Transactional
     public void collectSnapshots() {
 
-        List<Long> routeIds = routeRepository.findAllRouteIds();
-
+        List<Route> routes = routeService.findRunningRoutes();
         List<BusSnapshot> snapshots = new ArrayList<>();
 
         LocalDateTime collectedAt = LocalDateTime.now();
 
-        for (Long routeId : routeIds) {
+        for (Route route : routes) {
 
-            BusLocationResponse response =
-                    busLocationApiClient.getBusLocations(routeId);
+            try {
 
-            if (response == null
-                    || response.getResponse() == null
-                    || response.getResponse().getMsgBody() == null
-                    || response.getResponse().getMsgBody().getBusLocationList() == null) {
-                continue;
-            }
+                BusLocationResponse response =
+                        busLocationApiClient.getBusLocations(route.getRouteId());
 
-            List<BusLocationItem> items =
-                    response.getResponse().getMsgBody().getBusLocationList();
+                if (response == null
+                        || response.getResponse() == null
+                        || response.getResponse().getMsgBody() == null
+                        || response.getResponse().getMsgBody().getBusLocationList() == null) {
+                    continue;
+                }
 
-            for (BusLocationItem item : items) {
+                List<BusLocationItem> items =
+                        response.getResponse().getMsgBody().getBusLocationList();
 
-                BusSnapshot snapshot = BusSnapshot.builder()
-                        .collectedAt(collectedAt)
-                        .vehId(item.getVehId())
-                        .plateNo(item.getPlateNo())
-                        .routeId(item.getRouteId())
-                        .stationId(item.getStationId())
-                        .stationSeq(item.getStationSeq())
-                        .remainSeatCnt(item.getRemainSeatCnt())
-                        .stateCd(item.getStateCd())
-                        .build();
+                for (BusLocationItem item : items) {
 
-                snapshots.add(snapshot);
+                    BusSnapshot snapshot = BusSnapshot.builder()
+                            .collectedAt(collectedAt)
+                            .vehId(item.getVehId())
+                            .plateNo(item.getPlateNo())
+                            .routeId(item.getRouteId())
+                            .stationId(item.getStationId())
+                            .stationSeq(item.getStationSeq())
+                            .remainSeatCnt(item.getRemainSeatCnt())
+                            .stateCd(item.getStateCd())
+                            .build();
+
+                    snapshots.add(snapshot);
+                }
+
+            } catch (Exception e) {
+                log.error("노선 {} ({}) 수집 실패",
+                        route.getRouteName(),
+                        route.getRouteId(),
+                        e);
             }
         }
-
-        busSnapshotRepository.saveAll(snapshots);
+        if (!snapshots.isEmpty()) {
+            busSnapshotRepository.saveAll(snapshots);
+        }
     }
 }

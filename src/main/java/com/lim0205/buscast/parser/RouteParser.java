@@ -3,6 +3,7 @@ package com.lim0205.buscast.parser;
 import com.lim0205.buscast.entity.Route;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,24 +51,27 @@ public class RouteParser {
                     .startStationId(parseLong(columns[7]))
                     .endStationId(parseLong(columns[2]))
 
-                    .upFirstTime(parseString(columns[13]))
-                    .upLastTime(parseString(columns[14]))
-                    .downFirstTime(parseString(columns[15]))
-                    .downLastTime(parseString(columns[16]))
+                    .upFirstTime(parseTime(columns[13]))
+                    .upLastTime(parseTime(columns[14]))
+                    .downFirstTime(parseTime(columns[15]))
+                    .downLastTime(parseTime(columns[16]))
+
                     .peakAlloc(parseInteger(columns[17]))
                     .nonPeakAlloc(parseInteger(columns[18]))
 
-                    .satUpFirstTime(parseString(columns[19]))
-                    .satUpLastTime(parseString(columns[20]))
-                    .satDownFirstTime(parseString(columns[21]))
-                    .satDownLastTime(parseString(columns[22]))
+                    .satUpFirstTime(parseTime(columns[19]))
+                    .satUpLastTime(parseTime(columns[20]))
+                    .satDownFirstTime(parseTime(columns[21]))
+                    .satDownLastTime(parseTime(columns[22]))
+
                     .satPeakAlloc(parseInteger(columns[23]))
                     .satNonPeakAlloc(parseInteger(columns[24]))
 
-                    .sunUpFirstTime(parseString(columns[25]))
-                    .sunUpLastTime(parseString(columns[26]))
-                    .sunDownFirstTime(parseString(columns[27]))
-                    .sunDownLastTime(parseString(columns[28]))
+                    .sunUpFirstTime(parseTime(columns[25]))
+                    .sunUpLastTime(parseTime(columns[26]))
+                    .sunDownFirstTime(parseTime(columns[27]))
+                    .sunDownLastTime(parseTime(columns[28]))
+
                     .sunPeakAlloc(parseInteger(columns[29]))
                     .sunNonPeakAlloc(parseInteger(columns[30]))
                     .build();
@@ -80,6 +84,14 @@ public class RouteParser {
         return routes;
     }
 
+    private LocalTime parseTime(String value) {
+
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        return LocalTime.parse(value.trim());
+    }
 
     private Integer parseInteger(String value) {
         if (value == null || value.isBlank()) {

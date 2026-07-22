@@ -3,6 +3,8 @@ package com.lim0205.buscast.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalTime;
+
 @Entity
 @Table(name = "route")
 @Getter
@@ -27,17 +29,17 @@ public class Route {
     @Column(name = "end_station_id")
     private Long endStationId;
 
-    @Column(name = "up_first_time", length = 5)
-    private String upFirstTime;
+    @Column(name = "up_first_time")
+    private LocalTime upFirstTime;
 
-    @Column(name = "up_last_time", length = 5)
-    private String upLastTime;
+    @Column(name = "up_last_time")
+    private LocalTime upLastTime;
 
-    @Column(name = "down_first_time", length = 5)
-    private String downFirstTime;
+    @Column(name = "down_first_time")
+    private LocalTime downFirstTime;
 
-    @Column(name = "down_last_time", length = 5)
-    private String downLastTime;
+    @Column(name = "down_last_time")
+    private LocalTime downLastTime;
 
     @Column(name = "peak_alloc")
     private Integer peakAlloc;
@@ -46,16 +48,16 @@ public class Route {
     private Integer nonPeakAlloc;
 
     @Column(name = "sat_up_first_time", length = 5)
-    private String satUpFirstTime;
+    private LocalTime satUpFirstTime;
 
     @Column(name = "sat_up_last_time", length = 5)
-    private String satUpLastTime;
+    private LocalTime satUpLastTime;
 
     @Column(name = "sat_down_first_time", length = 5)
-    private String satDownFirstTime;
+    private LocalTime satDownFirstTime;
 
     @Column(name = "sat_down_last_time", length = 5)
-    private String satDownLastTime;
+    private LocalTime satDownLastTime;
 
     @Column(name = "sat_peak_alloc")
     private Integer satPeakAlloc;
@@ -64,16 +66,16 @@ public class Route {
     private Integer satNonPeakAlloc;
 
     @Column(name = "sun_up_first_time", length = 5)
-    private String sunUpFirstTime;
+    private LocalTime sunUpFirstTime;
 
     @Column(name = "sun_up_last_time", length = 5)
-    private String sunUpLastTime;
+    private LocalTime sunUpLastTime;
 
     @Column(name = "sun_down_first_time", length = 5)
-    private String sunDownFirstTime;
+    private LocalTime sunDownFirstTime;
 
     @Column(name = "sun_down_last_time", length = 5)
-    private String sunDownLastTime;
+    private LocalTime sunDownLastTime;
 
     @Column(name = "sun_peak_alloc")
     private Integer sunPeakAlloc;
