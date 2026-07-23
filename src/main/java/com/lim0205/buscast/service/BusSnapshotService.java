@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,8 @@ public class BusSnapshotService {
         List<BusSnapshot> snapshots = new ArrayList<>();
 
         LocalDateTime collectedAt = LocalDateTime.now();
+        log.info("Zone = {}", ZoneId.systemDefault());
+        log.info("CollectedAt = {}", collectedAt);
 
         for (Route route : routes) {
 

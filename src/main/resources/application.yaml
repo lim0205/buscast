@@ -14,8 +14,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        hibernate.jdbc.time_zone: Asia/Seoul
-
+        jdbc:
+          time_zone: Asia/Seoul
 external:
   bus:
     key: ${BUS_LOCATION_API_KEY}
