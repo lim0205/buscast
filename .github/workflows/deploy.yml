@@ -20,9 +20,14 @@ jobs:
           port: ${{ secrets.EC2_PORT }}
 
           script: |
+            export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+            export PATH=$JAVA_HOME/bin:$PATH
+  
+            java -version
+            echo $JAVA_HOME
             cd ~/buscast
 
-            git pull origin master || git pull origin main
+            git pull origin main
 
             chmod +x gradlew
             ./gradlew clean bootJar
