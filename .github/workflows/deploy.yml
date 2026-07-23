@@ -1,0 +1,32 @@
+name: Deploy Buscast
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          port: ${{ secrets.EC2_PORT }}
+
+          script: |
+            cd ~/buscast
+
+            git pull origin master || git pull origin main
+
+            chmod +x gradlew
+            ./gradlew clean bootJar
+
+            pkill -f "buscast-0.0.1-SNAPSHOT.jar" || true
+
+            nohup java -jar build/libs/buscast-0.0.1-SNAPSHOT.jar > app.log 2>&1 &

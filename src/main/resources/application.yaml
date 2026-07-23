@@ -1,8 +1,11 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/buscast
-    username: postgres
+    username: buscast
     password: postgres
+  jackson:
+    time-zone: Asia/Seoul
+
 
   jpa:
     hibernate:
@@ -11,6 +14,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        hibernate.jdbc.time_zone: Asia/Seoul
 
 external:
   bus:

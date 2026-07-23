@@ -28,7 +28,7 @@ import java.util.Map;
 public class StatisticsService {
 
     private static final String JOB_NAME = "station-statistics";
-    private static final int PREDICTION_HISTORY_RETENTION_DAYS = 5;
+    private static final int PREDICTION_HISTORY_RETENTION_DAYS = 30;
     private static final BigDecimal MAX_USER_QUEUE_WEIGHT = BigDecimal.valueOf(0.7);
     private static final BigDecimal USER_QUEUE_FULL_SAMPLE_COUNT = BigDecimal.valueOf(30);
     private static final BigDecimal CONFIDENCE_FULL_SAMPLE_COUNT = BigDecimal.valueOf(30);
