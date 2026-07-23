@@ -48,26 +48,22 @@ jobs:
   
             echo "STEP1"
             mkdir -p /home/ubuntu/app
-            
-            echo "STEP2"
+  
             JAR=$(find /home/ubuntu/app/build/libs -name "*.jar" | head -n 1)
-            echo "$JAR"
             
-            echo "STEP3"
             cp -f "$JAR" /home/ubuntu/app/buscast.jar
             
-            echo "STEP4"
+            pkill -f buscast.jar || true
+            sleep 2
             
-            echo "STEP5"
-            export BUS_LOCATION_API_KEY="${{ secrets.BUS_LOCATION_API_KEY }}"
+            nohup env BUS_LOCATION_API_KEY="${{ secrets.BUS_LOCATION_API_KEY }}" \
+            java -jar /home/ubuntu/app/buscast.jar \
+            > /home/ubuntu/app/app.log 2>&1 &
             
-            echo "STEP6"
-            nohup java -jar /home/ubuntu/app/buscast.jar > /home/ubuntu/app/app.log 2>&1 &
+            sleep 10
             
-            echo "STEP7"
-            sleep 5
+            echo "===== PROCESS ====="
+            pgrep -af buscast.jar || true
             
-            echo "STEP8"
-            pgrep -f "/home/ubuntu/app/buscast.jar"
-            
-            echo "DONE"
+            echo "===== APP LOG ====="
+            tail -100 /home/ubuntu/app/app.log
