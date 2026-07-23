@@ -53,13 +53,6 @@ jobs:
             
             cp -f "$JAR" /home/ubuntu/app/buscast.jar
             
-            PID=$(pgrep -f "java -jar /home/ubuntu/app/buscast.jar")
-  
-            if [ -n "$PID" ]; then
-              kill "$PID"
-              sleep 2
-            fi
-            
             nohup env BUS_LOCATION_API_KEY="${{ secrets.BUS_LOCATION_API_KEY }}" \
             java -jar /home/ubuntu/app/buscast.jar \
             > /home/ubuntu/app/app.log 2>&1 &
