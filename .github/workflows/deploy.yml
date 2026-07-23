@@ -57,7 +57,6 @@ jobs:
             cp -f "$JAR" /home/ubuntu/app/buscast.jar
             
             echo "STEP4"
-            pkill -f "/home/ubuntu/app/buscast.jar" || true
             
             echo "STEP5"
             export BUS_LOCATION_API_KEY="${{ secrets.BUS_LOCATION_API_KEY }}"
