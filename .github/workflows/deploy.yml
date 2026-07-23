@@ -59,6 +59,8 @@ jobs:
 
             pkill -f buscast.jar || true
 
+            export BUS_LOCATION_API_KEY="${{ secrets.BUS_LOCATION_API_KEY }}"
+
             setsid java -jar /home/ubuntu/app/buscast.jar > /home/ubuntu/app/app.log 2>&1 < /dev/null &
             disown || true
             exit 0
