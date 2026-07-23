@@ -62,18 +62,20 @@ public class RouteService {
                 || isRunningDirection(route.getDownFirstTime(), route.getDownLastTime(), now);
     }
 
+    private static final long LAST_BUS_BUFFER_MINUTES = 50;
+
     private boolean isRunningDirection(LocalTime first, LocalTime last, LocalTime now) {
 
         if (first == null || last == null) {
             return false;
         }
 
-        // 자정 안 넘는 노선
-        if (last.isAfter(first)) {
-            return !now.isBefore(first) && !now.isAfter(last);
+        LocalTime end = last.plusMinutes(LAST_BUS_BUFFER_MINUTES);
+
+        if (end.isAfter(first)) {
+            return !now.isBefore(first) && !now.isAfter(end);
         }
 
-        // 자정 넘는 노선
-        return !now.isBefore(first) || !now.isAfter(last);
+        return !now.isBefore(first) || !now.isAfter(end);
     }
 }

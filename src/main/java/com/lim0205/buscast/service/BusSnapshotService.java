@@ -32,8 +32,6 @@ public class BusSnapshotService {
         List<BusSnapshot> snapshots = new ArrayList<>();
 
         LocalDateTime collectedAt = LocalDateTime.now();
-        log.info("Zone = {}", ZoneId.systemDefault());
-        log.info("CollectedAt = {}", collectedAt);
 
         for (Route route : routes) {
 
