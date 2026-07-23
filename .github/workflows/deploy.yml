@@ -44,23 +44,31 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           port: ${{ secrets.EC2_PORT }}
           script: |
+            set -x
+  
+            echo "STEP1"
             mkdir -p /home/ubuntu/app
-
+            
+            echo "STEP2"
             JAR=$(find /home/ubuntu/app/build/libs -name "*.jar" | head -n 1)
-
-            if [ -z "$JAR" ]; then
-              echo "JAR not found!"
-              exit 1
-            fi
-
+            echo "$JAR"
+            
+            echo "STEP3"
             cp -f "$JAR" /home/ubuntu/app/buscast.jar
             
-            pkill -f "java -jar /home/ubuntu/app/buscast.jar" || true
-            sleep 3
+            echo "STEP4"
+            pkill -f "/home/ubuntu/app/buscast.jar" || true
             
+            echo "STEP5"
             export BUS_LOCATION_API_KEY="${{ secrets.BUS_LOCATION_API_KEY }}"
-
+            
+            echo "STEP6"
             nohup java -jar /home/ubuntu/app/buscast.jar > /home/ubuntu/app/app.log 2>&1 &
+            
+            echo "STEP7"
             sleep 5
-  
+            
+            echo "STEP8"
             pgrep -f "/home/ubuntu/app/buscast.jar"
+            
+            echo "DONE"
