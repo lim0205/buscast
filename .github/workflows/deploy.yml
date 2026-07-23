@@ -3,35 +3,62 @@ name: Deploy Buscast
 on:
   push:
     branches:
-      - master
       - main
+      - master
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to EC2
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Grant execute permission
+        run: chmod +x gradlew
+
+      - name: Build
+        run: ./gradlew clean bootJar
+
+      - name: Copy JAR to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          port: ${{ secrets.EC2_PORT }}
+          source: "build/libs/buscast-0.0.1-SNAPSHOT.jar"
+          target: "/home/ubuntu/app"
+
+      - name: Restart Application
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           port: ${{ secrets.EC2_PORT }}
-
           script: |
-            export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
-            export PATH=$JAVA_HOME/bin:$PATH
-  
-            java -version
-            echo $JAVA_HOME
-            cd ~/buscast
+            mkdir -p /home/ubuntu/app
 
-            git pull origin main
+            find /home/ubuntu/app -name "*.jar"
 
-            chmod +x gradlew
-            ./gradlew clean bootJar
+            JAR=$(find /home/ubuntu/app -name "*.jar" | head -n 1)
 
-            pkill -f "buscast-0.0.1-SNAPSHOT.jar" || true
+            if [ -z "$JAR" ]; then
+              echo "JAR not found!"
+              exit 1
+            fi
 
-            nohup java -jar build/libs/buscast-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+            cp "$JAR" /home/ubuntu/app/buscast.jar
+
+            pkill -f buscast.jar || true
+
+            setsid java -jar /home/ubuntu/app/buscast.jar > /home/ubuntu/app/app.log 2>&1 < /dev/null &
+            disown || true
+            exit 0
