@@ -48,19 +48,19 @@ jobs:
 
             find /home/ubuntu/app -name "*.jar"
 
-            JAR=$(find /home/ubuntu/app -name "*.jar" | head -n 1)
+            JAR=$(find /home/ubuntu/app/build/libs -name "*.jar" | head -n 1)
 
             if [ -z "$JAR" ]; then
               echo "JAR not found!"
               exit 1
             fi
 
-            cp "$JAR" /home/ubuntu/app/buscast.jar
-
-            pkill -f buscast.jar || true
-
+            cp -f "$JAR" /home/ubuntu/app/buscast.jar
+            
+            pkill -9 -f "java -jar /home/ubuntu/app/buscast.jar" || true
+            sleep 2
+            
             export BUS_LOCATION_API_KEY="${{ secrets.BUS_LOCATION_API_KEY }}"
 
-            setsid java -jar /home/ubuntu/app/buscast.jar > /home/ubuntu/app/app.log 2>&1 < /dev/null &
-            disown || true
+            nohup java -jar /home/ubuntu/app/buscast.jar> /home/ubuntu/app/app.log 2>&1 &
             exit 0
