@@ -46,8 +46,6 @@ jobs:
           script: |
             mkdir -p /home/ubuntu/app
 
-            find /home/ubuntu/app -name "*.jar"
-
             JAR=$(find /home/ubuntu/app/build/libs -name "*.jar" | head -n 1)
 
             if [ -z "$JAR" ]; then
@@ -57,10 +55,12 @@ jobs:
 
             cp -f "$JAR" /home/ubuntu/app/buscast.jar
             
-            pkill -9 -f "java -jar /home/ubuntu/app/buscast.jar" || true
-            sleep 2
+            pkill -f "java -jar /home/ubuntu/app/buscast.jar" || true
+            sleep 3
             
             export BUS_LOCATION_API_KEY="${{ secrets.BUS_LOCATION_API_KEY }}"
 
-            nohup java -jar /home/ubuntu/app/buscast.jar> /home/ubuntu/app/app.log 2>&1 &
-            exit 0
+            nohup java -jar /home/ubuntu/app/buscast.jar > /home/ubuntu/app/app.log 2>&1 &
+            sleep 5
+  
+            pgrep -f "/home/ubuntu/app/buscast.jar"
