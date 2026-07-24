@@ -102,6 +102,7 @@ public class PredictionService {
                         .dayType(dayType)
                         .timeSlot(previousTimeSlot.toString())
                         .userQueue(userQueue)
+                        .remainSeatCnt(currentBus == null ? null : currentBus.getRemainSeatCnt())
                         .predictedQueue(predictedQueue)
                         .predictedRemainSeat(predictedRemainSeat)
                         .predictedProbability(predictedProbability)

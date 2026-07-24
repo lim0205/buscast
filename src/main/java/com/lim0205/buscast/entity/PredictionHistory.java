@@ -36,6 +36,9 @@ public class PredictionHistory {
 
     private Integer actualQueue;
 
+    @Column(name="remain_seat_cnt")
+    private Integer remainSeatCnt;
+
     @Column(precision = 5, scale = 2)
     private BigDecimal predictedRemainSeat;
 
